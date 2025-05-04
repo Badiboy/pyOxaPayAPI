@@ -18,7 +18,7 @@ def test_api_functions():
     print("Supported currencies: ", client.supported_currencies()["data"])
     print("Supported networks: ", client.supported_networks()["data"])
     print("Supported fiat currencies: ", client.supported_fiat_currencies()["data"])
-    print("Get prices: ", client.get_prices()["data"])
+    print("Get prices: ", client.prices()["data"])
 
     if test_merchant_api_key:
         invoice = client.generate_invoice(1, "USDT")["data"]
