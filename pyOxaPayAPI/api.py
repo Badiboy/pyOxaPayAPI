@@ -101,7 +101,7 @@ class pyOxaPayAPI:
         # else:
         #     return resp
 
-    def get_api_status(self):
+    def system_status(self):
         """
         Check the current status of the OxaPay API, ensuring it is functioning correctly
         :return: The API status information
@@ -111,7 +111,7 @@ class pyOxaPayAPI:
         except Exception as e:
             raise pyOxaPayAPIException(f"Error getting status: {e}")
 
-    def create_invoice(
+    def generate_invoice(
             self,
             amount: float,
             currency: str = None,
@@ -173,7 +173,7 @@ class pyOxaPayAPI:
         except Exception as e:
             raise pyOxaPayAPIException(f"Error creating invoice: {e}")
 
-    def get_supported_currencies(self):
+    def supported_currencies(self):
         """
         Retrieves a list of supported currencies and their network details.
 
@@ -184,7 +184,7 @@ class pyOxaPayAPI:
         except Exception as e:
             raise pyOxaPayAPIException(f"Error getting supported currencies: {e}")
 
-    def get_supported_networks(self):
+    def supported_networks(self):
         """
         Retrieves a list of supported blockchain networks for cryptocurrency transactions.
 
@@ -195,7 +195,7 @@ class pyOxaPayAPI:
         except Exception as e:
             raise pyOxaPayAPIException(f"Error getting supported networks: {e}")
 
-    def get_supported_fiat_currencies(self):
+    def supported_fiat_currencies(self):
         """
         Retrieves a list of supported fiat currencies and their details.
 
@@ -206,7 +206,7 @@ class pyOxaPayAPI:
         except Exception as e:
             raise pyOxaPayAPIException (f"Error getting supported fiat currencies: {e}")
 
-    def get_payment_information(self, track_id: int):
+    def payment_information(self, track_id: int):
         """
         Retrieve detailed information about a specific payment using its track_id. After generating an invoice, you will receive a track_id, which serves as a reference for requesting payment details.
 
@@ -219,7 +219,7 @@ class pyOxaPayAPI:
         except Exception as e:
             raise pyOxaPayAPIException(f"Error getting payment information: {e}")
 
-    def create_white_label_payment(
+    def generate_white_label(
             self,
             pay_currency: str,
             amount: float,
@@ -274,7 +274,7 @@ class pyOxaPayAPI:
         except Exception as e:
             raise pyOxaPayAPIException(f"Error creating white label payment: {e}")
 
-    def create_static_address(
+    def generate_static_address(
             self,
             network: str,
             to_currency: str = None,
@@ -311,7 +311,7 @@ class pyOxaPayAPI:
         except Exception as e:
             raise pyOxaPayAPIException(f"Error creating static address: {e}")
 
-    def revoke_static_wallet(self, address: str):
+    def revoke_static_address(self, address: str):
         """
         Revokes a static wallet by disabling further transactions to the specified address.
 
@@ -326,7 +326,7 @@ class pyOxaPayAPI:
         except Exception as e:
             raise pyOxaPayAPIException(f"Error revoking static wallet: {e}")
 
-    def get_static_address_list(
+    def static_address_list(
             self,
             track_id: int = None,
             network: str = None,
@@ -369,7 +369,7 @@ class pyOxaPayAPI:
         except Exception as e:
             raise pyOxaPayAPIException(f"Error getting static address list: {e}")
 
-    def get_payment_history(
+    def payment_history(
             self,
             track_id: int = None,
             type_: str = None,
@@ -430,7 +430,7 @@ class pyOxaPayAPI:
         except Exception as e:
             raise pyOxaPayAPIException(f"Error getting payment history: {e}")
 
-    def get_accepted_currencies(self):
+    def accepted_currencies(self):
         try:
             return self.__request('GET', 'payment/accepted-currencies')
         except Exception as e:
@@ -442,7 +442,7 @@ class pyOxaPayAPI:
         except Exception as e:
             raise pyOxaPayAPIException(f"Error getting prices: {e}")
 
-    def get_account_balance(self, currency: str = None):
+    def account_balance(self, currency: str = None):
         """
         Retrieves the account balance for all wallets associated with a user.
 
@@ -458,7 +458,7 @@ class pyOxaPayAPI:
         except Exception as e:
             raise pyOxaPayAPIException(f"Error getting account balance: {e}")
 
-    def create_payout(
+    def generate_payout(
             self,
             address: str,
             currency: str,

@@ -26,7 +26,7 @@ client = pyOxaPayAPI(
     "xxxxxxx",                   # Merchand API key
     general_api_key="xxxxxxx",   # General API key (for account methods like "balance")
     payout_api_key="xxxxxxx")    # Payout API key (for payout methods)
-balances = client.get_account_balance(currency=currency.name)
+balances = client.account_balance(currency=currency.name)
 for currency, balance in balances["data"].items():
     print("Merchant balance: {} {}".format(balance, currency))
 ```
