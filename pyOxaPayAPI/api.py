@@ -47,7 +47,6 @@ class pyOxaPayAPI:
             self.headers["payout_api_key"] = payout_api_key
 
     def __request(self, method: str, endpoint: str, query_params=None, json_data=None):
-
         url = f'{API_URL}/{endpoint}'
 
         if (method == 'GET') and query_params:
@@ -369,10 +368,11 @@ class pyOxaPayAPI:
         except Exception as e:
             raise pyOxaPayAPIException(f"Error getting static address list: {e}")
 
+    # noinspection PyShadowingBuiltins
     def payment_history(
             self,
             track_id: int = None,
-            type_: str = None,
+            type: str = None,
             status: str = None,
             pay_currency: str = None,
             currency: str = None,
@@ -391,7 +391,7 @@ class pyOxaPayAPI:
         Retrieves the payment history based on specified filters.
 
         :param track_id: Filter payments by a specific invoice ID. Defaults to None.
-        :param type_: Filter payments by type (e.g., 'Invoice', 'White-Label', 'Static Wallet'). Defaults to None.
+        :param type: Filter payments by type (e.g., 'Invoice', 'White-Label', 'Static Wallet'). Defaults to None.
         :param status: Filter payments by status (e.g., 'Paid', 'Confirming'). Defaults to None.
         :param pay_currency: Filter payments by a specific crypto currency symbol in which the pay amount is specified. Defaults to None.
         :param currency: Filter payments by a specific currency symbol. Defaults to None.
@@ -409,7 +409,7 @@ class pyOxaPayAPI:
         """
         params = {
             'track_id': track_id,
-            'type': type_,
+            'type': type,
             'status': status,
             'pay_currency': pay_currency,
             'currency': currency,
@@ -431,12 +431,22 @@ class pyOxaPayAPI:
             raise pyOxaPayAPIException(f"Error getting payment history: {e}")
 
     def accepted_currencies(self):
+        """
+        retrieves the list of cryptocurrencies available for payment processing through OxaPay. These currencies are configured by you on the "Merchant Service" page of your account, specifying the cryptocurrencies your business accepts for payments.
+
+        :return: The list of accepted cryptocurrencies for payment processing.
+        """
         try:
             return self.__request('GET', 'payment/accepted-currencies')
         except Exception as e:
             raise pyOxaPayAPIException(f"Error getting accepted currencies: {e}")
 
-    def get_prices(self):
+    def prices(self):
+        """
+        Retrieves the current prices of all cryptocurrencies supported by OxaPay.
+
+        :return: The current prices of all supported cryptocurrencies.
+        """
         try:
             return self.__request('GET', 'common/prices')
         except Exception as e:
@@ -494,3 +504,68 @@ class pyOxaPayAPI:
             return self.__request('POST', 'payout', json_data=query_params)
         except Exception as e:
             raise pyOxaPayAPIException(f"Error creating payout: {e}")
+
+    def payout_information(self, track_id: int):
+        """
+        Retrieve detailed information about a specific payout using its track_id. After generating a payout request, you will receive a track_id, which serves as a reference for requesting payout details.
+
+        :param track_id: The unique identifier for the payout transaction.
+        :return: The payout information, either as a raw response or as a PayoutStatus object.
+        """
+        try:
+            return self.__request('GET', f'payout/{track_id}')
+        except Exception as e:
+            raise pyOxaPayAPIException(f"Error getting payout information: {e}")
+
+    # noinspection PyShadowingBuiltins
+    def payout_history(
+            self,
+            status: str = None,
+            type: str = None,
+            currency: str = None,
+            network: str = None,
+            from_amount: float = None,
+            to_amount: float = None,
+            from_date: int = None,
+            to_date: int = None,
+            sort_by: str = 'create_date',
+            sort_type: str = 'desc',
+            page: int = 1,
+            size: int = 10
+    ):
+        """
+        Retrieves the payout history based on specified filters.
+
+        :param status: Filter payouts based on their status (processing, complete, rejected, etc.). Defaults to None.
+        :param type: Filter payouts based on type (internal or external). Defaults to None.
+        :param currency: Specify the currency symbol for filtering payouts in a specific currency. Defaults to None.
+        :param network: Specify the blockchain network for filtering payouts on a particular network. Defaults to None.
+        :param from_amount: Specify the minimum payout amount for filtering. Defaults to None.
+        :param to_amount: Specify the maximum payout amount for filtering. Defaults to None.
+        :param from_date: The start of the date window to query for payouts in Unix format. Defaults to None.
+        :param to_date: The end of the date window to query for payouts in Unix format. Defaults to None.
+        :param sort_by: Sort the received list by a parameter. Possible values: 'create_date', 'pay_date', 'amount'. Default: 'create_date'.
+        :param sort_type: Display the list in ascending or descending order. Possible values: 'asc', 'desc'. Default: 'desc'.
+        :param page: The page number of the results you want to retrieve. Possible values: from 1 to the total number of pages. Default: 1.
+        :param size: Number of records to display per page. Possible values: from 1 to 200. Default: 10.
+        :return:
+        """
+        params = {
+            'status': status,
+            'type': type,
+            'currency': currency,
+            'network': network,
+            'from_amount': from_amount,
+            'to_amount': to_amount,
+            'from_date': from_date,
+            'to_date': to_date,
+            'sort_by': sort_by,
+            'sort_type': sort_type,
+            'page': page,
+            'size': size,
+        }
+        query_params = {k: v for k, v in params.items() if v is not None}
+        try:
+            return self.__request('GET', 'payout', query_params=query_params)
+        except Exception as e:
+            raise pyOxaPayAPIException(f"Error getting payout history: {e}")
